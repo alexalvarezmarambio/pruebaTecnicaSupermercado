@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.alexalvarez.pruebaTecnicaSupermercado.dto.ProductDTO;
+import cl.alexalvarez.pruebaTecnicaSupermercado.exception.NotFoundException;
 import cl.alexalvarez.pruebaTecnicaSupermercado.mapper.Mapper;
 import cl.alexalvarez.pruebaTecnicaSupermercado.model.Product;
 import cl.alexalvarez.pruebaTecnicaSupermercado.repository.ProductoRepository;
@@ -30,9 +31,14 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public ProductDTO updateProduct(Long id, ProductDTO product) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+  public ProductDTO updateProduct(Long id, ProductDTO dto) {
+    Product product = repo.findById(id)
+        .orElseThrow(() -> new NotFoundException("No existe."));
+
+    product.setName(dto.getName());
+    product.setPrice(dto.getPrice());
+
+    return Mapper.toDTO(repo.save(product));
   }
 
   @Override
