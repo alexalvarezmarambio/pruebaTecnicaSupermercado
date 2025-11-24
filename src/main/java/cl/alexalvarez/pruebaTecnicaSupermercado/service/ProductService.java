@@ -1,6 +1,7 @@
 package cl.alexalvarez.pruebaTecnicaSupermercado.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,8 @@ public class ProductService implements IProductService {
 
   @Override
   public List<ProductDTO> getAllProducts() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAllProducts'");
+    List<Product> products = repo.findAll();
+    return products.stream().map(p -> Mapper.toDTO(p)).collect(Collectors.toList());
   }
 
   @Override
