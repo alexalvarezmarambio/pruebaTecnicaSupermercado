@@ -53,7 +53,7 @@ public class Mapper {
         .build();
   }
 
-  public static List<SaleDetail> toModel(SaleDTO s) {
+  public static List<SaleDetail> toModel(SaleDTO s, Sale sale) {
     return s.getDetails().stream().map(
         d -> {
           var product = Product.builder()
@@ -67,6 +67,7 @@ public class Mapper {
               .qty(d.getQty())
               .price(d.getPrice())
               .product(product)
+              .sale(sale)
               .build();
         }).collect(Collectors.toList());
   }

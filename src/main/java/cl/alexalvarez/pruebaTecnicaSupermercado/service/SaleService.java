@@ -1,6 +1,7 @@
 package cl.alexalvarez.pruebaTecnicaSupermercado.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,18 @@ public class SaleService implements ISaleService {
     Branch branch = repoBranch.findById(dto.getBranchId())
         .orElseThrow();
     Sale sale = Mapper.toModel(dto, branch);
-    List<SaleDetail> details = Mapper.toModel(dto);
+    List<SaleDetail> details = Mapper.toModel(dto, sale);
     sale.setDetails(details);
     return Mapper.toDTO(repo.save(sale));
   }
 
   @Override
   public List<SaleDTO> getAllSales() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAllSales'");
+    List<Sale> sales = repo.findAll();
+    List<SaleDTO> dtos = sales.stream().map(
+        s -> Mapper.toDTO(s)).collect(Collectors.toList());
+
+    return dtos;
   }
 
   @Override
