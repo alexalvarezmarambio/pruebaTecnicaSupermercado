@@ -43,7 +43,9 @@ public class ProductService implements IProductService {
 
   @Override
   public void deleteProduct(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteProduct'");
+    Product product = repo.findById(id)
+        .orElseThrow(() -> new NotFoundException("No existe."));
+
+    repo.delete(product);
   }
 }
