@@ -1,5 +1,6 @@
 package cl.alexalvarez.pruebaTecnicaSupermercado.mapper;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import cl.alexalvarez.pruebaTecnicaSupermercado.dto.BranchDTO;
@@ -44,7 +45,16 @@ public class Mapper {
   }
 
   public static Sale toModel(SaleDTO s, Branch branch) {
-    var details = s.getDetails().stream().map(
+    return Sale.builder()
+        .id(s.getId())
+        .date(s.getDate())
+        .total(s.getTotal())
+        .branch(branch)
+        .build();
+  }
+
+  public static List<SaleDetail> toModel(SaleDTO s) {
+    return s.getDetails().stream().map(
         d -> {
           var product = Product.builder()
               .id(d.getProduct().getId())
@@ -59,14 +69,6 @@ public class Mapper {
               .product(product)
               .build();
         }).collect(Collectors.toList());
-
-    return Sale.builder()
-        .id(s.getId())
-        .date(s.getDate())
-        .total(s.getTotal())
-        .branch(branch)
-        .details(details)
-        .build();
   }
 
   public static SaleDTO toDTO(Sale s) {
