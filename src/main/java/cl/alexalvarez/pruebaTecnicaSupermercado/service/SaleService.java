@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.alexalvarez.pruebaTecnicaSupermercado.dto.SaleDTO;
+import cl.alexalvarez.pruebaTecnicaSupermercado.exception.NotFoundException;
 import cl.alexalvarez.pruebaTecnicaSupermercado.mapper.Mapper;
 import cl.alexalvarez.pruebaTecnicaSupermercado.model.Branch;
 import cl.alexalvarez.pruebaTecnicaSupermercado.model.Sale;
@@ -43,14 +44,27 @@ public class SaleService implements ISaleService {
 
   @Override
   public SaleDTO updateSale(Long id, SaleDTO dto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateSale'");
+    Sale sale = repo.findById(id).orElseThrow(() -> new NotFoundException("No existe"));
+
+    if (dto.getBranchId() != null) {
+      Branch branch = repoBranch.findById(dto.getBranchId()).orElse(null);
+      if (branch != null) {
+        sale.setBranch(branch);
+      }
+    }
+
+    if (dto.getTotal() != null) {
+      sale.setTotal(dto.getTotal());
+    }
+
+    return Mapper.toDTO(repo.save(sale));
   }
 
   @Override
   public void deleteSale(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteSale'");
+    Sale sale = repo.findById(id).orElseThrow(() -> new NotFoundException("No existe."));
+
+    repo.delete(sale);
   }
 
 }

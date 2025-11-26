@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/sales")
@@ -33,4 +36,15 @@ public class SaleController {
     return ResponseEntity.ok(sales);
   }
 
+  @PutMapping("{id}")
+  public ResponseEntity<?> updateSale(@PathVariable Long id, @RequestBody SaleDTO dto) {
+    SaleDTO sale = saleService.updateSale(id, dto);
+    return ResponseEntity.ok(sale);
+  }
+
+  @DeleteMapping("{id}")
+  public ResponseEntity<?> deleteSale(@PathVariable Long id) {
+    saleService.deleteSale(id);
+    return ResponseEntity.ok("Ok");
+  }
 }
